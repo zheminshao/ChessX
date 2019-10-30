@@ -42,13 +42,105 @@ public class Position {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (position[i][j] != 0) {
-                    // TODO finish
+
                 }
             }
         }
     }
 
+    private int findNumberOfMovesForPiece(int xPos, int yPos) {
+        byte pieceNum = position[xPos][yPos];
+        if (pieceNum == 1) {
+            return numMovesWhitePawn(xPos, yPos);
+        } else if (pieceNum == 2) {
+            return numMovesWhiteKnight(xPos, yPos);
+        } else if (pieceNum == 3) {
+            return numMovesWhiteBishop(xPos, yPos);
+        } else if (pieceNum == 4) {
+            return numMovesWhiteRook(xPos, yPos);
+        } else if (pieceNum == 5) {
+            return numMovesWhiteQueen(xPos, yPos);
+        } else if (pieceNum == 6) {
+            return numMovesWhiteKing(xPos, yPos);
+        } else if (pieceNum == 7) {
+            return numMovesBlackPawn(xPos, yPos);
+        } else if (pieceNum == 8) {
+            return numMovesBlackKnight(xPos, yPos);
+        } else if (pieceNum == 9) {
+            return numMovesBlackBishop(xPos, yPos);
+        } else if (pieceNum == 10) {
+            return numMovesBlackRook(xPos, yPos);
+        } else if (pieceNum == 11) {
+            return numMovesBlackQueen(xPos, yPos);
+        } else if (pieceNum == 12) {
+            return numMovesBlackKing(xPos, yPos);
+        }
+    }
 
+    private int numMovesWhitePawn(int xPos, int yPos) { // todo add empasant
+        int movesPossible = 0;
+        if (position[xPos][yPos - 1] == 0) { // move forward 1
+            movesPossible++;
+        }
+        if (yPos == 6 && position[xPos][yPos - 1] == 0 && position[xPos][yPos - 2] == 0) { // moving forward by 2
+            movesPossible++;
+        }
+        if (xPos != 7 && position[xPos + 1][yPos - 1] >= 7) { // one capture
+            movesPossible++;
+        }
+        if (xPos != 0 && position[xPos - 1][yPos - 1] >= 7) {
+            movesPossible++;
+        }
+        return movesPossible;
+    }
+
+    private int numMovesWhiteKnight(int xPos, int yPos) {
+        int movesPossible = 0;
+        if (xPos >= 2 && yPos != 0 && (position[xPos - 2][yPos - 1]  == 0 || position[xPos - 2][yPos - 1] >= 7)) { // x - 2, y - 1
+            movesPossible++;
+        }
+        if (xPos >= 2 && yPos != 7 && (position[xPos - 2][yPos + 1]  == 0 || position[xPos - 2][yPos + 1] >= 7)) { // x - 2, y + 1
+            movesPossible++;
+        }
+        if (xPos != 0 && yPos >= 2 && (position[xPos - 1][yPos - 2]  == 0 || position[xPos - 1][yPos - 2] >= 7)) { // x - 1, y - 2
+            movesPossible++;
+        }
+        if (xPos != 0 && yPos <= 5 && (position[xPos - 1][yPos + 2]  == 0 || position[xPos - 1][yPos + 2] >= 7)) { // x - 1, y + 2
+            movesPossible++;
+        }
+        // todo finish
+        return movesPossible;
+    }
+    private int numMovesWhiteBishop(int xPos, int yPos) {
+
+    }
+    private int numMovesWhiteRook(int xPos, int yPos) {
+
+    }
+    private int numMovesWhiteQueen(int xPos, int yPos) {
+
+    }
+    private int numMovesWhiteKing(int xPos, int yPos) {
+
+    }
+    private int numMovesBlackPawn(int xPos, int yPos) {
+
+    }
+    private int numMovesBlackKnight(int xPos, int yPos) {
+
+    }
+    private int numMovesBlackBishop(int xPos, int yPos) {
+
+    }
+    private int numMovesBlackRook(int xPos, int yPos) {
+
+    }
+    private int numMovesBlackQueen(int xPos, int yPos) {
+
+    }
+    private int numMovesBlackKing(int xPos, int yPos) {
+
+    }
 
 
     private void inputStartingPieces() {
