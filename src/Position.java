@@ -23,6 +23,7 @@ public class Position {
      */
     byte[][] position; //indexed 0 to 7
     boolean blackToMove;
+    ArrayList moveList = new ArrayList<Move>();
 
     public Position() { // initializes starting position
         position = new byte[8][8];
@@ -42,74 +43,82 @@ public class Position {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (position[i][j] != 0) {
-
+                    addMovesForPiece(i, j);
                 }
             }
         }
+        return moveList;
     }
 
-    private int findNumberOfMovesForPiece(int xPos, int yPos) {
+    private void addMovesForPiece(int xPos, int yPos) {
         byte pieceNum = position[xPos][yPos];
         if (pieceNum == 1) {
-            return numMovesWhitePawn(xPos, yPos);
+            addMovesWhitePawn(xPos, yPos);
         } else if (pieceNum == 2) {
-            return numMovesWhiteKnight(xPos, yPos);
+            addMovesWhiteKnight(xPos, yPos);
         } else if (pieceNum == 3) {
-            return numMovesWhiteBishop(xPos, yPos);
+            addMovesWhiteBishop(xPos, yPos);
         } else if (pieceNum == 4) {
-            return numMovesWhiteRook(xPos, yPos);
+            addMovesWhiteRook(xPos, yPos);
         } else if (pieceNum == 5) {
-            return numMovesWhiteQueen(xPos, yPos);
+            addMovesWhiteQueen(xPos, yPos);
         } else if (pieceNum == 6) {
-            return numMovesWhiteKing(xPos, yPos);
+            addMovesWhiteKing(xPos, yPos);
         } else if (pieceNum == 7) {
-            return numMovesBlackPawn(xPos, yPos);
+            addMovesBlackPawn(xPos, yPos);
         } else if (pieceNum == 8) {
-            return numMovesBlackKnight(xPos, yPos);
+            addMovesBlackKnight(xPos, yPos);
         } else if (pieceNum == 9) {
-            return numMovesBlackBishop(xPos, yPos);
+            addMovesBlackBishop(xPos, yPos);
         } else if (pieceNum == 10) {
-            return numMovesBlackRook(xPos, yPos);
+            addMovesBlackRook(xPos, yPos);
         } else if (pieceNum == 11) {
-            return numMovesBlackQueen(xPos, yPos);
+            addMovesBlackQueen(xPos, yPos);
         } else if (pieceNum == 12) {
-            return numMovesBlackKing(xPos, yPos);
+            addMovesBlackKing(xPos, yPos);
         }
     }
 
-    private int numMovesWhitePawn(int xPos, int yPos) { // todo add empasant
-        int movesPossible = 0;
+    private void addMovesWhitePawn(int xPos, int yPos) { // todo add em passant, promotion
         if (position[xPos][yPos - 1] == 0) { // move forward 1
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos, yPos - 1));
         }
         if (yPos == 6 && position[xPos][yPos - 1] == 0 && position[xPos][yPos - 2] == 0) { // moving forward by 2
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos, yPos - 2));
         }
         if (xPos != 7 && position[xPos + 1][yPos - 1] >= 7) { // one capture
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos - 1));
         }
-        if (xPos != 0 && position[xPos - 1][yPos - 1] >= 7) {
-            movesPossible++;
+        if (xPos != 0 && position[xPos - 1][yPos - 1] >= 7) { // other capture
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos - 1));
         }
-        return movesPossible;
     }
 
-    private int numMovesWhiteKnight(int xPos, int yPos) {
-        int movesPossible = 0;
+    private void addMovesWhiteKnight(int xPos, int yPos) { // adds eight possible knight moves, if legal
         if (xPos >= 2 && yPos != 0 && (position[xPos - 2][yPos - 1]  == 0 || position[xPos - 2][yPos - 1] >= 7)) { // x - 2, y - 1
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos - 2, yPos - 1));
         }
         if (xPos >= 2 && yPos != 7 && (position[xPos - 2][yPos + 1]  == 0 || position[xPos - 2][yPos + 1] >= 7)) { // x - 2, y + 1
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos - 2, yPos + 1));
         }
         if (xPos != 0 && yPos >= 2 && (position[xPos - 1][yPos - 2]  == 0 || position[xPos - 1][yPos - 2] >= 7)) { // x - 1, y - 2
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos - 2));
         }
         if (xPos != 0 && yPos <= 5 && (position[xPos - 1][yPos + 2]  == 0 || position[xPos - 1][yPos + 2] >= 7)) { // x - 1, y + 2
-            movesPossible++;
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos + 2));
         }
-        // todo finish
-        return movesPossible;
+        if (xPos <= 6 && yPos != 0 && (position[xPos + 2][yPos - 1]  == 0 || position[xPos + 2][yPos - 1] >= 7)) { // x - 2, y - 1
+            moveList.add(new Move(xPos, yPos, xPos + 2, yPos - 1));
+        }
+        if (xPos <= 6 && yPos != 7 && (position[xPos + 2][yPos + 1]  == 0 || position[xPos + 2][yPos + 1] >= 7)) { // x - 2, y + 1
+            moveList.add(new Move(xPos, yPos, xPos + 2, yPos + 1));
+        }
+        if (xPos != 7 && yPos >= 2 && (position[xPos + 1][yPos - 2]  == 0 || position[xPos + 1][yPos - 2] >= 7)) { // x - 1, y - 2
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos - 2));
+        }
+        if (xPos != 7 && yPos <= 5 && (position[xPos + 1][yPos + 2]  == 0 || position[xPos + 1][yPos + 2] >= 7)) { // x - 1, y + 2
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 2));
+        }
     }
     private int numMovesWhiteBishop(int xPos, int yPos) {
 
@@ -120,14 +129,74 @@ public class Position {
     private int numMovesWhiteQueen(int xPos, int yPos) {
 
     }
-    private int numMovesWhiteKing(int xPos, int yPos) {
-
+    private void addMovesWhiteKing(int xPos, int yPos) { // adds 8 king moves, if legal. TODO prevent king from entering check.
+        // move up
+        if (xPos != 0 && yPos != 0 && position[xPos - 1][yPos - 1] == 0 || position[xPos - 1][yPos - 1] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos - 1));
+        }
+        if (xPos != 0 && position[xPos - 1][yPos] == 0 || position[xPos - 1][yPos] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos));
+        }
+        if (xPos != 0 && yPos != 7 && position[xPos - 1][yPos + 1] == 0 || position[xPos - 1][yPos + 1] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos + 1));
+        }
+        // move horizontally
+        if (yPos != 0 && position[xPos][yPos - 1] == 0 || position[xPos][yPos - 1] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos, yPos - 1));
+        }
+        if (yPos != 7 && position[xPos][yPos + 1] == 0 || position[xPos][yPos + 1] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos, yPos + 1));
+        }
+        // move down
+        if (xPos != 7 && yPos != 0 && position[xPos + 1][yPos - 1] == 0 || position[xPos + 1][yPos - 1] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos - 1));
+        }
+        if (xPos != 7 && position[xPos + 1][yPos] == 0 || position[xPos + 1][yPos] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos));
+        }
+        if (xPos != 7 && yPos != 7 && position[xPos + 1][yPos + 1] == 0 || position[xPos + 1][yPos + 1] >= 7) {
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 1));
+        }
     }
-    private int numMovesBlackPawn(int xPos, int yPos) {
-
+    private void addMovesBlackPawn(int xPos, int yPos) { // todo add em passant, promotion
+        if (position[xPos][yPos + 1] == 0) { // move forward 1
+            moveList.add(new Move(xPos, yPos, xPos, yPos + 1));
+        }
+        if (yPos == 1 && position[xPos][yPos + 1] == 0 && position[xPos][yPos + 2] == 0) { // moving forward by 2
+            moveList.add(new Move(xPos, yPos, xPos, yPos + 2));
+        }
+        if (xPos != 0 && position[xPos + 1][yPos + 1] <= 6 && position[xPos + 1][yPos + 1] != 0) { // one capture
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 1));
+        }
+        if (xPos != 0 && position[xPos - 1][yPos + 1] <= 6 && position[xPos + 1][yPos + 1] != 0) { // other capture
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos + 1));
+        }
     }
-    private int numMovesBlackKnight(int xPos, int yPos) {
-
+    private void addMovesBlackKnight(int xPos, int yPos) {
+        if (xPos >= 2 && yPos != 0 && position[xPos - 2][yPos - 1]  <= 6) { // x - 2, y - 1
+            moveList.add(new Move(xPos, yPos, xPos - 2, yPos - 1));
+        }
+        if (xPos >= 2 && yPos != 7 && position[xPos - 2][yPos + 1]  <= 6) { // x - 2, y + 1
+            moveList.add(new Move(xPos, yPos, xPos - 2, yPos + 1));
+        }
+        if (xPos != 0 && yPos >= 2 && position[xPos - 1][yPos - 2]  <= 6) { // x - 1, y - 2
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos - 2));
+        }
+        if (xPos != 0 && yPos <= 5 && position[xPos - 1][yPos + 2]  <= 6) { // x - 1, y + 2
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos + 2));
+        }
+        if (xPos <= 6 && yPos != 0 && position[xPos + 2][yPos - 1]  <= 6) { // x - 2, y - 1
+            moveList.add(new Move(xPos, yPos, xPos + 2, yPos - 1));
+        }
+        if (xPos <= 6 && yPos != 7 && position[xPos + 2][yPos + 1]  <= 6) { // x - 2, y + 1
+            moveList.add(new Move(xPos, yPos, xPos + 2, yPos + 1));
+        }
+        if (xPos != 7 && yPos >= 2 && position[xPos + 1][yPos - 2]  <= 6) { // x - 1, y - 2
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos - 2));
+        }
+        if (xPos != 7 && yPos <= 5 && position[xPos + 1][yPos + 2]  <= 6) { // x - 1, y + 2
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 2));
+        }
     }
     private int numMovesBlackBishop(int xPos, int yPos) {
 
@@ -138,8 +207,34 @@ public class Position {
     private int numMovesBlackQueen(int xPos, int yPos) {
 
     }
-    private int numMovesBlackKing(int xPos, int yPos) {
-
+    private void addMovesBlackKing(int xPos, int yPos) {
+        // move up
+        if (xPos != 0 && yPos != 0 && position[xPos - 1][yPos - 1] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos - 1));
+        }
+        if (xPos != 0 && position[xPos - 1][yPos] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos));
+        }
+        if (xPos != 0 && yPos != 7 && position[xPos - 1][yPos + 1] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos - 1, yPos + 1));
+        }
+        // move horizontally
+        if (yPos != 0 && position[xPos][yPos - 1] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos, yPos - 1));
+        }
+        if (yPos != 7 && position[xPos][yPos + 1] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos, yPos + 1));
+        }
+        // move down
+        if (xPos != 7 && yPos != 0 && position[xPos + 1][yPos - 1] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos - 1));
+        }
+        if (xPos != 7 && position[xPos + 1][yPos] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos));
+        }
+        if (xPos != 7 && yPos != 7 && position[xPos + 1][yPos + 1] <= 6) {
+            moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 1));
+        }
     }
 
 
