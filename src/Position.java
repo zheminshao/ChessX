@@ -93,7 +93,6 @@ public class Position {
             moveList.add(new Move(xPos, yPos, xPos - 1, yPos - 1));
         }
     }
-
     private void addMovesWhiteKnight(int xPos, int yPos) { // adds eight possible knight moves, if legal
         if (xPos >= 2 && yPos != 0 && (position[xPos - 2][yPos - 1]  == 0 || position[xPos - 2][yPos - 1] >= 7)) { // x - 2, y - 1
             moveList.add(new Move(xPos, yPos, xPos - 2, yPos - 1));
@@ -120,14 +119,105 @@ public class Position {
             moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 2));
         }
     }
-    private int numMovesWhiteBishop(int xPos, int yPos) {
-
+    private void addMovesWhiteBishop(int xPos, int yPos) {
+        int currentx = xPos;
+        int currenty = yPos;
+        boolean canMoveRightUp = true;
+        while (canMoveRightUp) {
+            canMoveRightUp = false;
+            if (currentx < 7 && currenty < 7 && (position[currentx + 1][currenty + 1] == 0 || position[currentx + 1][currenty + 1] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx + 1, currenty + 1));
+                canMoveRightUp= true;
+                currentx++;
+                currenty++;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveRightDown = true;
+        while (canMoveRightDown) {
+            canMoveRightDown = false;
+            if (currentx < 7 && currenty > 0 && (position[currentx + 1][currenty - 1] == 0 || position[currentx + 1][currenty - 1] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx + 1, currenty - 1));
+                canMoveRightDown= true;
+                currentx++;
+                currenty--;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveLeftUp = true;
+        while (canMoveLeftUp) {
+            canMoveLeftUp = false;
+            if (currentx > 0 && currenty < 7 && (position[currentx - 1][currenty + 1] == 0 || position[currentx - 1][currenty + 1] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx - 1, currenty + 1));
+                canMoveLeftUp= true;
+                currentx--;
+                currenty++;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveLeftDown = true;
+        while (canMoveLeftDown) {
+            canMoveLeftDown = false;
+            if (currentx > 0 && currenty > 0 && (position[currentx - 1][currenty - 1] == 0 || position[currentx - 1][currenty - 1] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx - 1, currenty - 1));
+                canMoveLeftDown= true;
+                currentx--;
+                currenty--;
+            }
+        }
     }
-    private int numMovesWhiteRook(int xPos, int yPos) {
-
+    private void addMovesWhiteRook(int xPos, int yPos) {
+        int currentx = xPos;
+        int currenty = yPos;
+        boolean canMoveRight = true;
+        while (canMoveRight) {
+            canMoveRight = false;
+            if (currentx < 7 && (position[currentx + 1][currenty] == 0 || position[currentx + 1][currenty] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx + 1, currenty));
+                canMoveRight = true;
+                currentx++;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveLeft = true;
+        while (canMoveLeft) {
+            canMoveLeft = false;
+            if (currentx > 0 && (position[currentx - 1][currenty] == 0 || position[currentx - 1][currenty] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx - 1, currenty));
+                canMoveLeft = true;
+                currentx--;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveUp = true;
+        while (canMoveUp) {
+            canMoveUp = false;
+            if (currenty > 0 && (position[currentx][currenty - 1] == 0 || position[currentx][currenty - 1] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx, currenty - 1));
+                canMoveUp = true;
+                currenty--;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveDown = true;
+        while (canMoveDown) {
+            canMoveDown = false;
+            if (currentx < 7 && (position[currentx][currenty + 1] == 0 || position[currentx][currenty + 1] >= 7)){
+                moveList.add(new Move(xPos, yPos, currentx, currenty + 1));
+                canMoveDown = true;
+                currenty++;
+            }
+        }
     }
-    private int numMovesWhiteQueen(int xPos, int yPos) {
-
+    private void addMovesWhiteQueen(int xPos, int yPos) {
+        addMovesWhiteBishop(xPos, yPos);
+        addMovesWhiteRook(xPos, yPos);
     }
     private void addMovesWhiteKing(int xPos, int yPos) { // adds 8 king moves, if legal. TODO prevent king from entering check.
         // move up
@@ -158,6 +248,7 @@ public class Position {
             moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 1));
         }
     }
+
     private void addMovesBlackPawn(int xPos, int yPos) { // todo add em passant, promotion
         if (position[xPos][yPos + 1] == 0) { // move forward 1
             moveList.add(new Move(xPos, yPos, xPos, yPos + 1));
@@ -198,14 +289,105 @@ public class Position {
             moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 2));
         }
     }
-    private int numMovesBlackBishop(int xPos, int yPos) {
-
+    private void addMovesBlackBishop(int xPos, int yPos) {
+        int currentx = xPos;
+        int currenty = yPos;
+        boolean canMoveRightUp = true;
+        while (canMoveRightUp) {
+            canMoveRightUp = false;
+            if (currentx < 7 && currenty < 7 && (position[currentx + 1][currenty + 1] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx + 1, currenty + 1));
+                canMoveRightUp= true;
+                currentx++;
+                currenty++;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveRightDown = true;
+        while (canMoveRightDown) {
+            canMoveRightDown = false;
+            if (currentx < 7 && currenty > 0 && (position[currentx + 1][currenty - 1] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx + 1, currenty - 1));
+                canMoveRightDown= true;
+                currentx++;
+                currenty--;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveLeftUp = true;
+        while (canMoveLeftUp) {
+            canMoveLeftUp = false;
+            if (currentx > 0 && currenty < 7 && (position[currentx - 1][currenty + 1] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx - 1, currenty + 1));
+                canMoveLeftUp= true;
+                currentx--;
+                currenty++;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveLeftDown = true;
+        while (canMoveLeftDown) {
+            canMoveLeftDown = false;
+            if (currentx > 0 && currenty > 0 && (position[currentx - 1][currenty - 1] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx - 1, currenty - 1));
+                canMoveLeftDown= true;
+                currentx--;
+                currenty--;
+            }
+        }
     }
-    private int numMovesBlackRook(int xPos, int yPos) {
-
+    private void addMovesBlackRook(int xPos, int yPos) {
+        int currentx = xPos;
+        int currenty = yPos;
+        boolean canMoveRight = true;
+        while (canMoveRight) {
+            canMoveRight = false;
+            if (currentx < 7 && (position[currentx + 1][currenty] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx + 1, currenty));
+                canMoveRight = true;
+                currentx++;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveLeft = true;
+        while (canMoveLeft) {
+            canMoveLeft = false;
+            if (currentx > 0 && (position[currentx - 1][currenty] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx - 1, currenty));
+                canMoveLeft = true;
+                currentx--;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveUp = true;
+        while (canMoveUp) {
+            canMoveUp = false;
+            if (currenty > 0 && (position[currentx][currenty - 1] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx, currenty - 1));
+                canMoveUp = true;
+                currenty--;
+            }
+        }
+        currentx = xPos;
+        currenty = yPos;
+        boolean canMoveDown = true;
+        while (canMoveDown) {
+            canMoveDown = false;
+            if (currentx < 7 && (position[currentx][currenty + 1] <= 6)){
+                moveList.add(new Move(xPos, yPos, currentx, currenty + 1));
+                canMoveDown = true;
+                currenty++;
+            }
+        }
     }
-    private int numMovesBlackQueen(int xPos, int yPos) {
-
+    private void addMovesBlackQueen(int xPos, int yPos) {
+        addMovesBlackBishop(xPos, yPos);
+        addMovesBlackRook(xPos, yPos);
     }
     private void addMovesBlackKing(int xPos, int yPos) {
         // move up
