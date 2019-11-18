@@ -54,14 +54,25 @@ public class Position {
     }
 
     public ArrayList<Move> getAllLegalMoves() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (position[i][j] != 0) {
-                    addMovesForPiece(i, j);
+        if (moveList.size() == 0) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (position[i][j] != 0) {
+                        addMovesForPiece(i, j);
+                    }
                 }
             }
         }
         return moveList;
+    }
+
+    public boolean isLegalMove(Move move) {
+        for (Move m : getAllLegalMoves()) {
+            if (m.equals(move)) {
+                return true
+            }
+        }
+        return false;
     }
 
     private void addMovesForPiece(int xPos, int yPos) {

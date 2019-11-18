@@ -25,4 +25,15 @@ public class Move {
         return standardNotation.toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        if (((Move)obj).xInitial = xInitial && ((Move)obj).yInitial == yInitial && ((Move)obj).xFinal == xFinal && ((Move)obj).yFinal == yFinal) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
