@@ -13,16 +13,16 @@ public class Evaluation {
 	public final double knightV = 3.05;	/*						 */
 	public final double bishopV = 3.45;	/*						 */
 	public final double queenV = 9;		/*						 */
-	
+
 	public double PawnCOV = 0.1; //value for pawns in 2,2 to 2,5, 5,2 to 5,5
 	public double PawnCIV = 0.2; //value for pawns in center four squares
-	public double KnightCOV = 0.4; 
+	public double KnightCOV = 0.4;
 	public double KnightCIV = 0.5;
-	
+
 	public Evaluation() {
-		
+
 	}
-	
+
 	public double evaluatePieceValue(Position pos) {
 		double score = 0.0;
 		for (int i = 0; i < 8; i++) {
@@ -50,7 +50,7 @@ public class Evaluation {
 				}
 			}
 		}
-	
+
 		DecimalFormat df = new DecimalFormat("#.##");
 		score = Double.valueOf(df.format(score));
 		if (score == 0.0) {
@@ -58,16 +58,16 @@ public class Evaluation {
 		}
 		return score;
 	}
-	
+
 	public double evaluateKingSafety(Position pos) {
 		double score = 0.0;
 		byte piece;
-		
+
 		//Finds King
 		int[] kingLocation = findKing(pos);
 		int kingR = kingLocation[0];
 		int kingC = kingLocation[1];
-		
+
 		//Checks first circle around King
 		for (int r = kingR - 1; r < kingR + 2; r++) {
 			for (int c = kingC - 1; c < kingC + 2; c++) {
@@ -89,7 +89,7 @@ public class Evaluation {
 				}
 			}
 		}
-		
+
 		//Checks second circle around King
 		for (int r = kingR - 2; r < kingR + 3; r++) {
 			for (int c = kingC - 2; c < kingC + 3; c++) {
@@ -111,7 +111,7 @@ public class Evaluation {
 				}
 			}
 		}
-		
+
 		//Checks for distance from center
 		double distanceScore = (Math.abs(kingR - 3.5) + Math.abs(kingC - 3.5))/2.0;
 		if (pos.blackToMove) {
@@ -119,10 +119,10 @@ public class Evaluation {
 		} else {
 			score += distanceScore;
 		}
-		
+
 		return score;
 	}
-	
+
 	/*Finds location of the king corresponding to which color's move it is.
 	 * Returns an array of two integers for the row and column.
 	 * Returns {-1, -1} if king is not found (this should never happen).
@@ -146,7 +146,7 @@ public class Evaluation {
 		}
 		return kingLocation;
 	}
-	
+
 	public double evaluateCenterControl(Position pos) {
 		double score = 0.0;
 		for (int i = 2; i < 6; i++) {
