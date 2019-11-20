@@ -33,7 +33,25 @@ public class Board extends JPanel {
 				frame.repaint();
 			}
 		}
-		this.pieces = setUp(pos);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Piece[][] pieceArray = new Piece[8][8];
+				//if (init) {
+				//Piece[][] pieces = new Piece[8][8];
+				for (int c = 0; c < 8; c++) {
+					for (int r = 0; r < 8; r++) {
+						if (pos.getSquare(r, c) != 0) {
+							//System.out.println("making piece");
+							pieceArray[r][c] = new Piece(pos.getSquare(r, c), c, r);
+							frame.add(pieceArray[r][c]);
+							frame.revalidate();
+							frame.repaint();
+						}
+					}
+				}
+			}
+		});
+
 		this.pos = pos;
 
 		//frame.add(squares);
@@ -117,12 +135,7 @@ public class Board extends JPanel {
 //		} catch (InterruptedException e) {
 //			System.out.println("InterruptedException");
 //		}
-		SwingUtilities.invokeLater(new Runnable() {
-	         public void run() {
 
-
-	         }
-	      });
 		pieces[rI][cI].movePiece(rF, cF);
 		pieces[rF][cF] = pieces[rI][cI];
 		//System.out.println("Repaint piece about to be called");
