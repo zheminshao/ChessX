@@ -30,7 +30,7 @@ public class Board extends JPanel {
 				squares[r][c] = new Square(r, c);
 				frame.add(squares[r][c]);
 				frame.revalidate();
-				//squares[r][c].repaint();
+				frame.repaint();
 			}
 		}
 		this.pieces = setUp(pos);
@@ -84,7 +84,7 @@ public class Board extends JPanel {
 						pieceArray[r][c] = new Piece(pos.getSquare(r, c), c, r);
 						frame.add(pieceArray[r][c]);
 						frame.revalidate();
-						//pieceArray[r][c].repaint();
+						frame.repaint();
 					}
 				}
 			}

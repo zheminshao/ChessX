@@ -13,7 +13,7 @@ public class Piece extends JPanel {
 	private int r;
 	private BufferedImage img;
 	//private int a;
-	
+
 	public Piece(byte id, int c, int r) {
 		this.id = id;
 		this.c = c;
@@ -25,7 +25,7 @@ public class Piece extends JPanel {
 	    	System.out.println("image not found when piece was being initialized");
 	    }
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 //		try {
@@ -34,9 +34,9 @@ public class Piece extends JPanel {
 //			System.out.println("InterruptedException");
 //		}
 		g.drawImage(img, 51*(c+1) + 1, 51*(r+1) + 1, null);
-		System.out.println("Painted piece");
+		System.out.println("Painted piece" + id);
 	}
-	
+
 	public Piece movePiece(int r, int c) {
 		this.c = c;
 		this.r = r;
@@ -44,11 +44,11 @@ public class Piece extends JPanel {
 		revalidate();
 		return this;
 	}
-	
+
 	public String toString() {
 		return "id: " + id + " (" + r + ", " + c + ")";
 	}
-	
+
 //	public void changeA(int a) {
 //		this.a = a;
 //	}
