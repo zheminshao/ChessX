@@ -12,7 +12,7 @@ public class Piece extends JPanel {
 	private int c;
 	private int r;
 	private BufferedImage img;
-	//private int a;
+
 
 	public Piece(byte id, int c, int r) {
 		this.id = id;
@@ -28,11 +28,7 @@ public class Piece extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			System.out.println("InterruptedException");
-//		}
+		super.paintComponent(g);
 		g.drawImage(img, 51*(c+1) + 1, 51*(r+1) + 1, null);
 		System.out.println("Painted piece" + id);
 	}
@@ -49,7 +45,5 @@ public class Piece extends JPanel {
 		return "id: " + id + " (" + r + ", " + c + ")";
 	}
 
-//	public void changeA(int a) {
-//		this.a = a;
-//	}
+
 }
