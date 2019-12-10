@@ -6,10 +6,10 @@ public class PawnDistance {
 	public boolean blackPawnPos = false;
 
 	public DistanceCheck(Position pstn) {
-		for (i = 0; i < 8; i++) {
-			for (j = 0; j < 8; j++){
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++){
 				if (pstn.getSquare(i, j) == 7) {
-					for (cb = i; !whitePawnPos; cb++){
+					for (int cb = i; !whitePawnPos; cb++){
 						if (pstn.getSquare(cb, j) == 1) {
 							whitePawnPos = true;
 							return cb - i;
@@ -22,7 +22,7 @@ public class PawnDistance {
 					}
 
 				} else if (pstn.getSquare(i, j) == 1) {
-					for (cw = i; !blackPawnPos; cw--){
+					for (int cw = i; !blackPawnPos; cw--){
 						if (pstn.getSquare(cw, j) == 7) {
 							blackPawnPos = true;
 							return cw - i;
