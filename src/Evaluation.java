@@ -30,6 +30,16 @@ public class Evaluation {
 	public double knightKS = 0.1;
 	public double queenKS = 0.05;
 	
+	//Rooks
+	public double rSeventhRank = 0.25;
+	public double rOpenFile = 0.35;
+	public double rConnected = 0.1;
+	
+	//Development
+	public double developmentScore = 0.1;
+	
+	public int count = 0;
+	
 	public Evaluation() {
 		
 	}
@@ -182,7 +192,7 @@ public class Evaluation {
 		}
 		
 		//Checks for distance from center
-		distanceScore = (Math.abs(kingR - 3.5) + Math.abs(kingC - 3.5))/5.0;
+		distanceScore = (2 * Math.abs(kingR - 3.5) + Math.abs(kingC - 3.5))/5.0;
 		if (pos.isBlackToMove()) {
 			score += distanceScore;
 		} else {
@@ -310,6 +320,19 @@ public class Evaluation {
 		return score;
 	}
 	
+	public double evaluateDevelopment(Position pos) {
+		double score = 0.0;
+		for (int c = 0; c < 8; c++) {
+			if (pos.getSquare(0, c) > 6 && pos.getSquare(0, c) != 10 && pos.getSquare(0, c) != 12) {
+				score += developmentScore;
+			}
+			if (pos.getSquare(7, c) < 6 && pos.getSquare(7, c) != 4) {
+				score -= developmentScore;
+			}
+		}
+		return score;
+	}
+	
 	public double evaluate(Position pos) {
 		ArrayList<Move> moves = pos.getAllLegalMoves();
 		if (moves.size() == 0) {
@@ -328,8 +351,69 @@ public class Evaluation {
 		double score = evaluatePieceValue(pos)
 				+ evaluateCenterControl(pos) 
 				+ evaluateKingSafety(pos)
-				+ evaluateMobility(pos, moves);
+				+ evaluateMobility(pos, moves)
+				+ evaluateDevelopment(pos)
+				+ evaluateRooks(pos);
 		score = round(score, 2);
+		count++;
+		if (count % 10000 == 0) {
+			System.out.println(count/10000 + "0k positions evaluated");
+		}
 		return score;
+	}
+	
+	public double evaluateRooks(Position pos) {
+		double score = 0.0;
+		ArrayList<Integer> whiteRooks = findPiece(pos, (byte) 4);
+		for (int location: whiteRooks) {
+			if (location / 8 == 1) {
+				score += rSeventhRank;
+			}
+			int file = location % 8;
+			boolean open = true;
+			for (int i = 0; i < 8; i++) {
+				if (pos.getSquare(i, file) == 1 || pos.getSquare(i, file) == 7) {
+					open = false;
+				}
+				if (pos.getSquare(i, file) == 4) {
+					score += rConnected;
+				}
+			}
+			if (open) {
+				score += rOpenFile;
+			}
+		}
+		ArrayList<Integer> blackRooks = findPiece(pos, (byte) 10);
+		for (int location: blackRooks) {
+			if (location / 8 == 6) {
+				score -= rSeventhRank;
+			}
+			int file = location % 8;
+			boolean open = true;
+			for (int i = 0; i < 8; i++) {
+				if (pos.getSquare(i, file) == 1 || pos.getSquare(i, file) == 7) {
+					open = false;
+				}
+				if (pos.getSquare(i, file) == 10) {
+					score -= rConnected;
+				}
+			}
+			if (open) {
+				score -= rOpenFile;
+			}
+		}
+		return score;
+	}
+	
+	private ArrayList<Integer> findPiece(Position pos, byte id) {
+		ArrayList<Integer> pieceLocations = new ArrayList<Integer>();
+		for (int r = 0; r < 8; r++) {
+			for (int c = 0; c < 8; c++) {
+				if (pos.getSquare(r, c) == id) {
+					pieceLocations.add(8 * r + c);
+				}
+			}
+		}
+		return pieceLocations;
 	}
 }

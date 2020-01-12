@@ -3,7 +3,7 @@ package data;
 
 import java.util.ArrayList;
 
-public class Position {
+public class Position implements Comparable<Position> {
 
 
     /*
@@ -38,7 +38,7 @@ public class Position {
     
     private boolean castleTest = false;
     
-    private double score;
+    private double score = Double.MAX_VALUE;
     
     public Position() { // initializes starting position
         position = new byte[8][8];
@@ -846,6 +846,26 @@ public class Position {
         if (xPos != 7 && yPos != 7 && position[xPos + 1][yPos + 1] <= 6) {
             moveList.add(new Move(xPos, yPos, xPos + 1, yPos + 1));
         }
+    }
+    
+    public int compareTo(Position pos) {
+    	if (pos.getScore() - this.getScore() == 0) {
+    		return 0;
+    	} else {
+	    	if (this.isBlackToMove()) {
+	    		if (pos.getScore() > this.getScore()) {
+	    			return 1;
+	    		} else {
+	    			return -1;
+	    		}
+	    	} else {
+	    		if (this.getScore() > pos.getScore()) {
+	    			return 1;
+	    		} else {
+	    			return -1;
+	    		}
+	    	}
+    	}
     }
 
     private byte[][] inputStartingPieces() {
