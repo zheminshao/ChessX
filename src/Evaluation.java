@@ -1,5 +1,6 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import data.Move;
 import data.Position;
@@ -34,6 +35,11 @@ public class Evaluation {
 	public double rSeventhRank = 0.25;
 	public double rOpenFile = 0.35;
 	public double rConnected = 0.1;
+	
+	//Pawns
+	public double pawnConnected = 0.05;
+	public double doubledPawns = 0.2;
+	public double pawnGap = 0.1;
 	
 	//Development
 	public double developmentScore = 0.1;
@@ -353,12 +359,62 @@ public class Evaluation {
 				+ evaluateKingSafety(pos)
 				+ evaluateMobility(pos, moves)
 				+ evaluateDevelopment(pos)
-				+ evaluateRooks(pos);
+				+ evaluateRooks(pos)
+				+ evaluatePawns(pos);
 		score = round(score, 2);
 		count++;
 		if (count % 10000 == 0) {
 			System.out.println(count/10000 + "0k positions evaluated");
 		}
+		return score;
+	}
+	
+	public double evaluatePawns(Position pos) {
+		double score = 0.0;
+		ArrayList<Integer> whitePawns = findPiece(pos, (byte) 1);
+		ArrayList<Integer> whitePawnColumns = new ArrayList<Integer>();
+		for (int location: whitePawns) {
+			int r = location / 8;
+			int c = location % 8;
+			whitePawnColumns.add(c);
+			if (c > 0 && pos.getSquare(r - 1, c - 1) == 1) {
+				score += pawnConnected;
+			}
+			if (c < 7 && pos.getSquare(r - 1, c + 1) == 1) {
+				score += pawnConnected;
+			}
+		}
+		Collections.sort(whitePawnColumns);
+		for (int i = 0; i < whitePawnColumns.size() - 1; i++) {
+			if (whitePawnColumns.get(i) == whitePawnColumns.get(i + 1)) {
+				score -= doubledPawns;
+			} else if (whitePawnColumns.get(i) - whitePawnColumns.get(i + 1) < -1) {
+				score -= pawnGap;
+			}
+		}
+		
+		ArrayList<Integer> blackPawns = findPiece(pos, (byte) 7);
+		ArrayList<Integer> blackPawnColumns = new ArrayList<Integer>();
+		for (int location: blackPawns) {
+			int r = location / 8;
+			int c = location % 8;
+			blackPawnColumns.add(c);
+			if (c > 0 && pos.getSquare(r + 1, c - 1) == 7) {
+				score -= pawnConnected;
+			}
+			if (c < 7 && pos.getSquare(r + 1, c + 1) == 7) {
+				score -= pawnConnected;
+			}
+		}
+		Collections.sort(blackPawnColumns);
+		for (int i = 0; i < blackPawnColumns.size() - 1; i++) {
+			if (blackPawnColumns.get(i) == blackPawnColumns.get(i + 1)) {
+				score += doubledPawns;
+			} else if (blackPawnColumns.get(i) - blackPawnColumns.get(i + 1) < -1) {
+				score += pawnGap;
+			}
+		}
+		
 		return score;
 	}
 	
