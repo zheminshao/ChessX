@@ -16,6 +16,13 @@ public class Engine {
 	
 	public Move play(Position pos) {
 		eval.count = 0;
+		if (eval.evaluatePieceValueNoPawns(pos) <= 18) {
+			eval.setEndgame(true);
+			presetDepth = 6;
+		} else {
+			eval.setEndgame(false);
+			presetDepth = 4;
+		}
 		ArrayList<Move> moves = pos.getAllLegalMoves();
 		ArrayList<Position> positions = new ArrayList<Position>();
 		for (Move m: moves) {
@@ -183,11 +190,12 @@ public class Engine {
 			return pos.getScore() * (depth + 1);
 			//return eval.evaluate(pos) * (depth + 1);
 		}
-
+		
 		for (Position p: posList1) {
 			p.setScore(eval.evaluate(p));
 		}
 		Collections.sort(posList1);
+		
 		
 //		if (depth > 2 && pos.isBlackToMove() && eval.evaluate(pos) < alpha - 1) {
 //			depth = 2;
@@ -253,4 +261,21 @@ public class Engine {
 //		}
 //		return posList;
 //	}
+	
+	public ArrayList<Position> nullCut(ArrayList<Position> posList, double cutAmount) {
+		for (Position pos: posList) {
+			pos.switchTurn();
+			pos.setScore(treeEvalNX(pos, -1000000 * (presetDepth - 1) - 2, 1000000 * (presetDepth - 1) + 2, 1));
+		}
+		Collections.sort(posList);
+		int size = posList.size();
+		for (int i = 0; i < size * cutAmount; i++) {
+			posList.remove(0);
+		}
+		for (Position pos: posList) {
+			pos.setScore(Double.MAX_VALUE);
+			pos.switchTurn();
+		}
+		return posList;
+	}
 }
