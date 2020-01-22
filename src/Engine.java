@@ -30,7 +30,7 @@ public class Engine {
 	
 	//Opening Mode
 	//-1 Engine does not use theory
-	// 0 Engine plays top theory move only (NOT WORKING because moves are ordered incorrectly)
+	// 0 Engine plays top theory move only (most lines)
 	// 1 Engine plays random theory move, weighted by depth of theory (RECOMMENDED)
 	// 2 Engine plays random theory move
 	private int openingMode = 1;
@@ -52,25 +52,43 @@ public class Engine {
 	
 	public Move play(Position pos) {
 		if (isTheory()) {
-			if (openingMode != 0) {
-				ArrayList<Integer> tRows = new ArrayList<Integer>();
-				int totalRows = wb.getSheetAt(1).getPhysicalNumberOfRows();
-				tRows.add(wbRow);
-				int lastGoodRow = wbRow;
-				wbRow++;
-				while (wbRow < totalRows && !(wb.getSheetAt(1).getRow(wbRow).getCell(wbCol) == null) && (wbCol == 0 || wb.getSheetAt(1).getRow(wbRow).getCell(wbCol - 1).toString().equals("-"))) {
-					//System.out.println(wbRow + " " + wbCol);
-					if (!wb.getSheetAt(1).getRow(wbRow).getCell(wbCol).toString().equals("-")) {
-						tRows.add(wbRow);
-						lastGoodRow = wbRow;
-					} else {
-						if (openingMode == 1) {
-							tRows.add(lastGoodRow);
-						}
+			ArrayList<Integer> tRows = new ArrayList<Integer>();
+			int totalRows = wb.getSheetAt(1).getPhysicalNumberOfRows();
+			tRows.add(wbRow);
+			int lastGoodRow = wbRow;
+			wbRow++;
+			while (wbRow < totalRows && !(wb.getSheetAt(1).getRow(wbRow).getCell(wbCol) == null) && (wbCol == 0 || wb.getSheetAt(1).getRow(wbRow).getCell(wbCol - 1).toString().equals("-"))) {
+				//System.out.println(wbRow + " " + wbCol);
+				if (!wb.getSheetAt(1).getRow(wbRow).getCell(wbCol).toString().equals("-")) {
+					tRows.add(wbRow);
+					lastGoodRow = wbRow;
+				} else {
+					if (openingMode == 0 || openingMode == 1) {
+						tRows.add(lastGoodRow);
 					}
-					wbRow++;
 				}
+				wbRow++;
+			}
+			if (openingMode == 1 || openingMode == 2) {
 				wbRow = tRows.get((int) (Math.random() * tRows.size()));
+			} else if (openingMode == 0) {
+				int currentRow = tRows.get(0);
+				int bestRow = tRows.get(0);
+				int max = 0;
+				int count = 0;
+				for (int r: tRows) {
+					if (r == currentRow) {
+						count++;
+						if (count > max) {
+							max = count;
+							bestRow = r;
+						}
+					} else {
+						currentRow = r;
+						count = 0;
+					}
+				}
+				wbRow = bestRow;
 			}
 			String tMove = wb.getSheetAt(1).getRow(wbRow).getCell(wbCol).toString();
 			Move theoryMove = new Move(0, 0, 0, 0);
