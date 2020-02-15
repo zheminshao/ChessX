@@ -44,6 +44,68 @@ public class Evaluation {
 	//Development
 	public double developmentScore = 0.1;
 	
+	//Piece Square Tables
+	public double[][] pawnSquareTable = {
+			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+			{5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0},
+			{1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0},
+			{0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5},
+			{0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0},
+			{0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5},
+			{0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5},
+			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+		};
+	public double[][] knightSquareTable = {
+			{-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0},
+			{-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0},
+			{-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0},
+			{-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0},
+			{-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0},
+			{-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0},
+			{-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0},
+			{-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0}
+		};
+	public double[][] bishopSquareTable = {
+			{-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0},
+			{-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0},
+			{-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0},
+			{-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0},
+			{-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0},
+			{-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0},
+			{-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0},
+			{-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
+		};
+	public double[][] rookSquareTable = {
+			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+			{0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5},
+			{-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5},
+			{-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5},
+			{-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5},
+			{-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5},
+			{-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5},
+			{0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0}
+		};
+	public double[][] queenSquareTable = {
+			{-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
+			{-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0},
+			{-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0},
+			{-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5},
+			{0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5},
+			{-1.0, 0.5, 0,5, 0,5, 0,5, 0,5, 0.0, -1.0},
+			{-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0},
+			{-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}
+		};
+	public double[][] kingSquareTable = {
+			{-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+			{-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+			{-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+			{-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+			{-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
+			{-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
+			{2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0},
+			{2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0}
+		};
+	
 	public int count = 0;
 	
 	private boolean endgame = false;
@@ -389,7 +451,8 @@ public class Evaluation {
 					+ evaluateMobility(pos, moves)
 					+ evaluateDevelopment(pos)
 					+ evaluateRooks(pos)
-					+ evaluatePawns(pos);
+					+ evaluatePawns(pos)
+					+ evaluatePieceSquareTable(pos);
 			score = round(score, 2);
 			count++;
 			if (count % 10000 == 0) {
@@ -578,6 +641,40 @@ public class Evaluation {
 			}
 			if (open) {
 				score -= rOpenFile;
+			}
+		}
+		return score;
+	}
+	
+	public double evaluatePieceSquareTable(Position pos) {
+		double score = 0.0;
+		for (int r = 0; r < 8; r++) {
+			for (int c = 0; c < 8; c++) {
+				if (pos.getSquare(r, c) == 1) {
+					score += pawnSquareTable[r][c];
+				} else if (pos.getSquare(r, c) == 2) {
+					score += knightSquareTable[r][c];
+				} else if (pos.getSquare(r, c) == 3) {
+					score += bishopSquareTable[r][c];
+				} else if (pos.getSquare(r, c) == 4) {
+					score += rookSquareTable[r][c];
+				} else if (pos.getSquare(r, c) == 5) {
+					score += queenSquareTable[r][c];
+				} else if (pos.getSquare(r, c) == 6) {
+					score += kingSquareTable[r][c];
+				} else if (pos.getSquare(r, c) == 7) {
+					score -= pawnSquareTable[7 - r][7 - c];
+				} else if (pos.getSquare(r, c) == 8) {
+					score -= knightSquareTable[7 - r][7 - c];
+				} else if (pos.getSquare(r, c) == 9) {
+					score -= bishopSquareTable[7 - r][7 - c];
+				} else if (pos.getSquare(r, c) == 10) {
+					score -= rookSquareTable[7 - r][7 - c];
+				} else if (pos.getSquare(r, c) == 11) {
+					score -= queenSquareTable[7 - r][7 - c];
+				} else if (pos.getSquare(r, c) == 12) {
+					score -= kingSquareTable[7 - r][7 - c];
+				}
 			}
 		}
 		return score;

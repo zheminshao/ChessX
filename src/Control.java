@@ -71,30 +71,31 @@ public class Control {
 //				if (lastMove.charAt(4) == '0') {
 //					lastMove = lastMove.substring(0, 4);
 //				}
-				
-				boolean moveFound = false;
-				int totalRows = engine.getWb().getSheetAt(1).getPhysicalNumberOfRows();
-				if (engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()).toString().equals(lastMove)) {
-					engine.setWbCol(engine.getWbCol() + 1);
-					moveFound = true;
-				} else {
-					engine.setWbRow(engine.getWbRow() + 1);
-					while (engine.getWbRow() < totalRows && !(engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()) == null) && (engine.getWbCol() == 0 || engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol() - 1).toString().equals("-"))) {
-						if (engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()).toString().equals(lastMove)) {
-							engine.setWbCol(engine.getWbCol() + 1);
-							moveFound = true;
-							break;
-						}
+				if (engine.isTheory()) {
+					boolean moveFound = false;
+					int totalRows = engine.getWb().getSheetAt(1).getPhysicalNumberOfRows();
+					if (engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()).toString().equals(lastMove)) {
+						engine.setWbCol(engine.getWbCol() + 1);
+						moveFound = true;
+					} else {
 						engine.setWbRow(engine.getWbRow() + 1);
+						while (engine.getWbRow() < totalRows && !(engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()) == null) && (engine.getWbCol() == 0 || engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol() - 1).toString().equals("-"))) {
+							if (engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()).toString().equals(lastMove)) {
+								engine.setWbCol(engine.getWbCol() + 1);
+								moveFound = true;
+								break;
+							}
+							engine.setWbRow(engine.getWbRow() + 1);
+						}
 					}
-				}
-				
-				//System.out.println(engine.getWbRow() + " " + engine.getWbCol());
-				
-				if (!moveFound) {
-					engine.setTheory(false);
-				} else if (engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()).toString().equals("-")) {
-					engine.setTheory(false);
+					
+					//System.out.println(engine.getWbRow() + " " + engine.getWbCol());
+					
+					if (!moveFound) {
+						engine.setTheory(false);
+					} else if (engine.getWb().getSheetAt(1).getRow(engine.getWbRow()).getCell(engine.getWbCol()).toString().equals("-")) {
+						engine.setTheory(false);
+					}
 				}
 			} else {
 				System.out.println("Illegal move");
