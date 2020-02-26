@@ -14,6 +14,7 @@ public class Control {
 	private int mouseRowF = -1;
 	private int mouseColF = -1;
 	private Engine engine;
+	private Evaluation eval;
   
 	public Control() {
 		this.pos = new Position();
@@ -21,6 +22,7 @@ public class Control {
 		this.mouse = new MyMouseListener(this);
 		board.getFrame().addMouseListener(mouse);
 		this.engine = new Engine();
+		this.eval = new Evaluation();
 		//Initialize vars here
 	}
 
@@ -67,6 +69,7 @@ public class Control {
 				String lastMove = board.getPosition().toHumanNotation(move);
 				//System.out.println(lastMove);
 				board.move(move);
+				displayEvaluation(board.getPosition());
 //				String lastMove = move.toRawString();
 //				if (lastMove.charAt(4) == '0') {
 //					lastMove = lastMove.substring(0, 4);
@@ -123,6 +126,32 @@ public class Control {
 //		System.out.println("Center Control: " + centerControlScore);
 		Move mov = engine.play(board.getPosition());
 		board.move(mov);
+		displayEvaluation(board.getPosition());
 		//System.out.println("Engine move: " + mov);
+	}
+	
+	public void displayEvaluation(Position pos) {
+		if (engine.isTheory()) {
+			System.out.println("This is a book move.");
+		} else {
+			System.out.println("Net position evaluation: " + eval.evaluate(pos));
+			if (eval.isEndgame()) {
+				System.out.println("This is an endgame position.");
+				System.out.println("Material: " + eval.evaluatePieceValue(pos));
+				System.out.println("King Activity: " + eval.evaluateKingActivity(pos));
+				System.out.println("Rooks: " + eval.evaluateRooks(pos));
+				System.out.println("Pawns: " + eval.evaluatePawnsEndgame(pos));
+			} else {
+				System.out.println("This is a middlegame position.");
+				System.out.println("Material: " + eval.evaluatePieceValue(pos));
+				System.out.println("Center Control: " + eval.evaluateCenterControl(pos));
+				System.out.println("King Safety: " + eval.evaluateKingSafety(pos));
+				System.out.println("Development: " + eval.evaluateDevelopment(pos));
+				System.out.println("Rooks: " + eval.evaluateRooks(pos));
+				System.out.println("Pawns: " + eval.evaluatePawns(pos));
+				System.out.println("Piece-Square Table: " + eval.evaluatePieceSquareTable(pos));
+				
+			}
+		}
 	}
 }

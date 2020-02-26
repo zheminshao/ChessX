@@ -161,6 +161,7 @@ public class Engine {
 				}
 			}
 		}
+		System.out.println("Engine evaluation: " + bestMove.getScore());
 		return bestMove;
 	}
 	

@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -15,13 +17,16 @@ public class Board extends JPanel {
 	private final JFrame frame;
 	private Position pos;
 	private Piece[][] pieces;
+	private ArrayList<Piece> pieceCollection;
 	//private boolean init = true;
 	private Square[][] squares;
 
 	public Board(Position pos) {
 		this.setPreferredSize(new Dimension(510, 510));
 		this.frame = new JFrame("ChessX");
-		frame.setBackground(new Color(255, 255, 255));
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
+		frame.setBackground(new Color(234, 234, 234));
 		frame.add(this);
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,9 +40,17 @@ public class Board extends JPanel {
 				//squares[r][c].repaint();
 			}
 		}
+		this.pieceCollection = new ArrayList<Piece>();
 		this.pieces = setUp(pos);
 		this.pos = pos;
 
+		frame.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent componentEvent) {
+				System.out.println("Resize detected");
+				refreshBoard();
+		    }
+		});
+		
 		//frame.add(squares);
 	}
 
@@ -86,6 +99,7 @@ public class Board extends JPanel {
 					if (pos.getSquare(r, c) != 0) {
 						//System.out.println("making piece");
 						pieceArray[r][c] = new Piece(pos.getSquare(r, c), c, r);
+						pieceCollection.add(pieceArray[r][c]);
 						frame.add(pieceArray[r][c]);
 						frame.revalidate();
 						//pieceArray[r][c].repaint();
@@ -325,5 +339,9 @@ public class Board extends JPanel {
 	}
 	public Position getPosition() {
 		return pos;
+	}
+	
+	public void refreshBoard() {
+		setUp(pos);
 	}
 }
