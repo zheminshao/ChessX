@@ -30,6 +30,8 @@ public class Position implements Comparable<Position> {
     private byte[][] position; //indexed 0 to 7
     private boolean blackToMove;
     ArrayList<Move> moveList = new ArrayList<Move>();
+    ArrayList<Move> captureList = new ArrayList<Move>();
+    ArrayList<Move> otherList = new ArrayList<Move>();
     
     private int enPassantColumn = -1;
 
@@ -40,7 +42,10 @@ public class Position implements Comparable<Position> {
     
     private boolean castleTest = false;
     
+    private Move lastMove;
+    
     private double score = Double.MAX_VALUE;
+    private int historyScore = 0;
     
     public Position() { // initializes starting position
         position = new byte[8][8];
@@ -69,6 +74,8 @@ public class Position implements Comparable<Position> {
 
     public ArrayList<Move> getAllLegalMoves() {
         moveList = new ArrayList<Move>();
+        captureList = new ArrayList<Move>();
+        otherList = new ArrayList<Move>();
     	if (moveList.size() == 0) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -83,6 +90,10 @@ public class Position implements Comparable<Position> {
     		//legal = true;
     		Move potentialMov = (Move) moveList.get(i);
     		Position potentialPos = new Position(this);
+    		boolean capture = false;
+    		if (potentialPos.getSquare(potentialMov.getxFinal(), potentialMov.getyFinal()) % 6 >= potentialPos.getSquare(potentialMov.getxInitial(), potentialMov.getyInitial()) % 6 && !(potentialPos.getSquare(potentialMov.getxInitial(), potentialMov.getyInitial()) % 6 + potentialPos.getSquare(potentialMov.getxFinal(), potentialMov.getyFinal()) % 6 == 0)) {
+    			capture = true;
+    		}
     		if (potentialMov.getPromotionID() != 0) {
     			potentialPos.setSquare(potentialMov.getxFinal(), potentialMov.getyFinal(), potentialMov.getPromotionID());
     		} else {
@@ -103,6 +114,12 @@ public class Position implements Comparable<Position> {
     		if (inCheck(potentialPos)) {
     			moveList.remove(i);
     			i--;
+    		} else {
+    			if (capture) {
+    				captureList.add(potentialMov);
+    			} else {
+    				otherList.add(potentialMov);
+    			}
     		}
     	}
         return moveList;
@@ -297,7 +314,17 @@ public class Position implements Comparable<Position> {
 			pos.setSquare(rI, 0, (byte) 0);
 		}
 		
+		pos.setLastMove(mov);
+		
 		return pos;
+	}
+	
+	public void setLastMove(Move m) {
+		this.lastMove = m;
+	}
+	
+	public Move getLastMove() {
+		return lastMove;
 	}
 	
 	public Position switchTurn() {
@@ -309,6 +336,14 @@ public class Position implements Comparable<Position> {
 	public ArrayList<Position> getNextPositions() {
 		ArrayList<Position> posList = new ArrayList<Position>();
 		ArrayList<Move> movList = this.getAllLegalMoves();
+		for (Move m: movList) {
+			posList.add(positionAfterMove(m));
+		}
+		return posList;
+	}
+	
+	public ArrayList<Position> getNextPositions(ArrayList<Move> movList) {
+		ArrayList<Position> posList = new ArrayList<Position>();
 		for (Move m: movList) {
 			posList.add(positionAfterMove(m));
 		}
@@ -851,17 +886,30 @@ public class Position implements Comparable<Position> {
     }
     
     public int compareTo(Position pos) {
-    	if (pos.getScore() - this.getScore() == 0) {
+    	double historyDiff = pos.getHistoryScore() - this.getHistoryScore();
+    	if (!this.isBlackToMove()) {
+    		historyDiff *= -1;
+    	}
+    	//double test = pos.getScore() - this.getScore() + historyDiff;
+    	//double test = pos.getScore() - this.getScore() + historyDiff/90.0;
+    	//double test = pos.getScore() - this.getScore() + historyDiff/50.0;
+    	//double test = pos.getScore() - this.getScore() + historyDiff/200.0;
+    	//double test = pos.getScore() - this.getScore() + historyDiff/350.0;
+    	//double test = pos.getScore() - this.getScore() + historyDiff/500.0;
+    	//double test = pos.getScore() - this.getScore() + historyDiff/800.0;
+    	double test = pos.getScore() - this.getScore() + historyDiff/2000.0;
+    	//double test = pos.getScore() - this.getScore();
+    	if (test == 0) {
     		return 0;
     	} else {
 	    	if (this.isBlackToMove()) {
-	    		if (pos.getScore() > this.getScore()) {
+	    		if (test > 0) {
 	    			return 1;
 	    		} else {
 	    			return -1;
 	    		}
 	    	} else {
-	    		if (this.getScore() > pos.getScore()) {
+	    		if (test < 0) {
 	    			return 1;
 	    		} else {
 	    			return -1;
@@ -967,6 +1015,14 @@ public class Position implements Comparable<Position> {
 		return moveNotation;
     }
     
+    public ArrayList<Move> getCaptureList() {
+    	return captureList;
+    }
+    
+    public ArrayList<Move> getOtherList() {
+    	return otherList;
+    }
+    
     private byte[][] inputStartingPieces() {
     	return new byte[][] {
 				{10, 8, 9, 11, 12, 9, 8, 10},
@@ -992,4 +1048,16 @@ public class Position implements Comparable<Position> {
 				{0, 0, 0, 0, 0, 0, 6, 0}
 			};
     }
+
+	public ArrayList<Move> getMoveList() {
+		return moveList;
+	}
+
+	public int getHistoryScore() {
+		return historyScore;
+	}
+
+	public void setHistoryScore(int historyScore) {
+		this.historyScore = historyScore;
+	}
 }

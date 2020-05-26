@@ -35,6 +35,9 @@ public class Engine {
 	// 2 Engine plays random theory move
 	private int openingMode = 1;
 	
+	private ArrayList<Move> historyList = new ArrayList<Move>();
+	private ArrayList<Integer> historyCount = new ArrayList<Integer>();
+	
 	public Engine() {
 		this.eval = new Evaluation();
 		this.presetDepth = 4; //Looks n plies ahead
@@ -116,9 +119,11 @@ public class Engine {
 			return theoryMove;
 		}
 		eval.count = 0;
+//		historyList = new ArrayList<Move>();
+//		historyCount = new ArrayList<Integer>();
 		if (eval.evaluatePieceValueNoPawns(pos) <= 18) {
 			eval.setEndgame(true);
-			presetDepth = 6;
+			presetDepth = 4;
 		} else {
 			eval.setEndgame(false);
 			presetDepth = 4;
@@ -128,7 +133,6 @@ public class Engine {
 		for (Move m: moves) {
 			positions.add(pos.positionAfterMove(m));
 		}
-		Collections.sort(positions);
 		for (int i = 0; i < moves.size(); i++) {
 			moves.get(i).setScore(treeEvalNX(positions.get(i), -1000000 * (presetDepth - 1) - 2, 1000000 * (presetDepth - 1) + 2, presetDepth - 1));
 			if (moves.get(i).getScore() == 1000000 * presetDepth) {
@@ -161,6 +165,7 @@ public class Engine {
 				}
 			}
 		}
+		System.out.println("Total postitions evaluated: " + eval.getCount());
 		System.out.println("Engine evaluation: " + bestMove.getScore());
 		return bestMove;
 	}
@@ -277,13 +282,12 @@ public class Engine {
 	
 	public double treeEvalNX(Position pos, double alpha, double beta, int depth) {
 		if (depth == 0) {
+			
 			return pos.getScore();
 			//return eval.evaluate(pos);
 		}
-		
-		ArrayList<Position> posList1 = pos.getNextPositions();
-		
-		if (posList1.size() == 0) {
+		ArrayList<Move> legalMoves = pos.getAllLegalMoves();
+		if (legalMoves.size() == 0) {
 			//System.out.println(pos.getScore() * (depth + 1));
 			if (pos.getScore() == Double.MAX_VALUE) {
 				return eval.evaluate(pos) * (depth + 1);
@@ -292,11 +296,37 @@ public class Engine {
 			//return eval.evaluate(pos) * (depth + 1);
 		}
 		
+		ArrayList<Position> posList1 = pos.getNextPositions(pos.getCaptureList());
+		
 		for (Position p: posList1) {
 			p.setScore(eval.evaluate(p));
+			if (historyList.contains(p.getLastMove())) {
+				p.setHistoryScore(historyCount.get(historyList.indexOf(p.getLastMove())));
+				//System.out.println(historyList.get(historyList.indexOf(p.getLastMove())) + " " + historyCount.get(historyList.indexOf(p.getLastMove())));
+			}
 		}
 		Collections.sort(posList1);
 		
+		ArrayList<Position> posList2 = pos.getNextPositions(pos.getOtherList());
+		
+		for (Position p: posList2) {
+			p.setScore(eval.evaluate(p));
+			if (historyList.contains(p.getLastMove())) {
+				//System.out.println("got here");
+				p.setHistoryScore(historyCount.get(historyList.indexOf(p.getLastMove())));
+				//System.out.println(historyList.get(historyList.indexOf(p.getLastMove())) + " " + historyCount.get(historyList.indexOf(p.getLastMove())));
+			}
+		}
+		Collections.sort(posList2);
+		
+		posList1.addAll(posList2);
+		
+		//System.out.println(posList1.size());
+		
+//		int size = posList1.size();
+//		for (int i = 0; i < size; i++) {
+//			posList1.remove(posList1.size() - 1);
+//		}
 		
 //		if (depth > 2 && pos.isBlackToMove() && eval.evaluate(pos) < alpha - 1) {
 //			depth = 2;
@@ -317,6 +347,14 @@ public class Engine {
 					beta = score;
 				}
 				if (alpha >= beta) {
+					Move mm = pos1.getLastMove();
+					if (historyList.contains(mm)) {
+						historyCount.set(historyList.indexOf(mm), historyCount.get(historyList.indexOf(mm)) + 1);
+					} else {
+						historyList.add(mm);
+						historyCount.add(1);
+					}
+					//System.out.println("History List updated" + historyCount.get(historyList.indexOf(mm)) + mm.toString());
 					break;
 				}
 			}
@@ -331,6 +369,13 @@ public class Engine {
 					alpha = score;
 				}
 				if (alpha >= beta) {
+					Move mm = pos1.getLastMove();
+					if (historyList.contains(mm)) {
+						historyCount.set(historyList.indexOf(mm), historyCount.get(historyList.indexOf(mm)) + 1);
+					} else {
+						historyList.add(mm);
+						historyCount.add(1);
+					}
 					break;
 				}
 			}

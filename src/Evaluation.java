@@ -16,8 +16,8 @@ public class Evaluation {
 	//Piece Values
 	public final double pawnV = 1;
 	public final double rookV = 5;
-	public final double knightV = 3.05;
-	public final double bishopV = 3.45;
+	public final double knightV = 3;
+	public final double bishopV = 3;
 	public final double queenV = 9;
 	
 	//Center Control
@@ -703,5 +703,9 @@ public class Evaluation {
 
 	public void setEndgame(boolean endgame) {
 		this.endgame = endgame;
+	}
+	
+	public int getCount() {
+		return count;
 	}
 }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -134,6 +136,7 @@ public class Control {
 		if (engine.isTheory()) {
 			System.out.println("This is a book move.");
 		} else {
+			//System.out.println("Total positions evaluated: " + eval.getCount());
 			System.out.println("Net position evaluation: " + eval.evaluate(pos));
 			if (eval.isEndgame()) {
 				System.out.println("This is an endgame position.");
@@ -153,5 +156,23 @@ public class Control {
 				
 			}
 		}
+		
+//		System.out.println(pos.getCaptureList().size());
+//		for (Move m: pos.getCaptureList()) {
+//			System.out.println(m.toRawString());
+//		}
+//		System.out.println(pos.getOtherList().size());
+		
+//		System.out.print("Captures: ");
+//		ArrayList<Move> captureList = pos.getCaptureList();
+//		int size = captureList.size();
+//		if (captureList.size() == 0) {
+//			System.out.println("none");
+//		} else {
+//			System.out.println();
+//			for (int i = 0; i < size; i++) {
+//				System.out.println(pos.toHumanNotation(captureList.get(i)));
+//			}
+//		}
 	}
 }

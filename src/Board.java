@@ -5,6 +5,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
+import javafx.scene.control.Alert;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,7 +26,7 @@ public class Board extends JPanel {
 	public Board(Position pos) {
 		this.setPreferredSize(new Dimension(510, 510));
 		this.frame = new JFrame("ChessX");
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		frame.setBackground(new Color(234, 234, 234));
 		frame.add(this);
@@ -47,7 +49,7 @@ public class Board extends JPanel {
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent componentEvent) {
 				System.out.println("Resize detected");
-				refreshBoard();
+				//refreshBoard();
 		    }
 		});
 		
@@ -341,7 +343,7 @@ public class Board extends JPanel {
 		return pos;
 	}
 	
-	public void refreshBoard() {
-		setUp(pos);
-	}
+//	public void refreshBoard() {
+//		
+//	}
 }
